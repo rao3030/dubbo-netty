@@ -1,0 +1,3 @@
+a=example.demo.service.Impl.ASpiServiceImpl
+b=example.demo.service.Impl.BSpiServiceImpl
+c=example.demo.service.Impl.CSpiServiceImpl

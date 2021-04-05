@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!--    todo     consumer-消费者  -->
+    <!-- todo 自定义标签解析类，看dubbo的jar包META-INF的spring.handlers 就找到了 DubboNamespaceHandler 这个类只不过是封装成BeanDefinition而已 -->
+
+    <!--全局配置。不过优先级肯定是小于精确配置的 group="dev" 服务分组-->
+    <dubbo:consumer timeout="3000"/>
+    <!--retries重试次数，这个覆盖不了dubbo:reference的默认的retries=2-->
+    <dubbo:provider timeout="1000" retries="1"/>
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="dubbo-consumer"/>
+
+    <!--注册中心地址，暴露发现服务地址-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+    <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
+    <!--check为false就可以优先于provider启动，指定消费哪一个provider的版本的服务version="2.0"-->
+    <!--todo default失败重试2次(不包括第一次的调用，调用总次数是3次)，timeout是调用provider接口到结束所花的时间，针对多个相同服务的实例的loadbalance算法-->
+    <dubbo:reference id="providerDetailsService1" interface="example.demo.service.ProviderDetailsService"
+                     timeout="2000" retries="4" loadbalance="random" check="false" version="2.0"/>
+
+    <!--async="true"异步调用-->
+    <dubbo:reference id="providerDetailsService2" interface="example.demo.service.ProviderDetailsService"
+                     check="false" version="2.0" async="true"/>
+
+    <!--失败回调onthrow ; 成功回调onreturn 异步调用且没有获取调用结果的话，调用方不会因受provider的异常干扰，回调接口是可以拿到调用接口的异常-->
+    <!--异步调用，获取结果 or 同步调用 consumer就会拿到provider的异常-->
+    <!--async="true"异步调用-->
+    <dubbo:reference id="providerDetailsService3" interface="example.demo.service.ProviderDetailsService"
+                     check="false" version="1.0">
+        <dubbo:method name="callbackMethod" onreturn="dubboCallback.onSuccess" onthrow="dubboCallback.onError"
+                      async="true"/>
+    </dubbo:reference>
+
+    <!--泛化调用-->
+    <dubbo:reference id="unkonwnServie" interface="example.demo.service.UnKnowService" generic="true" version="1.0"/>
+</beans>

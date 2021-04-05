@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!--    todo     producer-生产者  -->
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="dubbo-provider"/>
+
+    <!--注册中心地址，暴露发现服务地址-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+    <!-- 用dubbo协议在20881端口暴露服务，可以有多个dubbo:protocol -->
+    <dubbo:protocol id="d1" name="dubbo" port="20881"/>
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:service interface="example.demo.service.ProviderDetailsService" ref="providerDetailsService" protocol="d1"
+                   version="2.0"/>
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:service interface="example.demo.service.ProviderDetailsService" ref="providerDetailsService" protocol="d1"
+                   version="1.0"/>
+
+    <dubbo:protocol id="d2" name="dubbo" port="20882"/>
+    <!--    <dubbo:service interface="example.demo.service.ProviderDetailsService" ref="providerDetailsService" protocol="d2"/>-->
+
+    <!-- 声明需要暴露的服务接口的实现类 -->
+    <bean id="providerDetailsService" class="example.demo.service.impl.ProviderDetailsServiceImpl"/>
+
+    <dubbo:service interface="example.demo.service.UnKnowService" ref="unKnowService" protocol="d1"
+                   version="1.0"/>
+    <bean id="unKnowService" class="example.demo.service.impl.UnKnowServiceImpl"/>
+</beans>

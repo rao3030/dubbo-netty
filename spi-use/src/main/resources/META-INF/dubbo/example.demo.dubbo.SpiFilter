@@ -1,0 +1,3 @@
+A=example.demo.dubbo.ASpiFilterImpl
+B=example.demo.dubbo.BSpiFilterImpl
+C=example.demo.dubbo.CSpiFilterImpl
