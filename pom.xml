@@ -13,6 +13,7 @@
         <module>dubbo-use-base</module>
         <module>spi-use</module>
         <module>netty-base</module>
+        <module>rpc-framework</module>
     </modules>
 
     <properties>

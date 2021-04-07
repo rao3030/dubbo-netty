@@ -13,6 +13,7 @@
         <module name="dubbo-api" />
         <module name="dubbo-consumer" />
         <module name="spi-use" />
+        <module name="rpc-framework" />
       </profile>
     </annotationProcessing>
   </component>
